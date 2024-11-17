@@ -318,6 +318,7 @@ export async function getCollections(): Promise<Collection[]> {
     tags: [TAGS.collections]
   });
   const shopifyCollections = removeEdgesAndNodes(res.body?.data?.collections);
+
   const collections = [
     {
       handle: '',
@@ -337,6 +338,7 @@ export async function getCollections(): Promise<Collection[]> {
     )
   ];
 
+  console.log(collections);
   return collections;
 }
 
