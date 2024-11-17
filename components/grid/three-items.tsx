@@ -3,34 +3,37 @@ import { getCollectionProducts } from 'lib/shopify';
 import type { Product } from 'lib/shopify/types';
 import Link from 'next/link';
 
-function ThreeItemGridItem({
+function ThreeItemHero({
   item,
   size,
   priority
 }: {
   item: Product;
-  size: 'full' | 'half';
+  size: 'large' | 'medium' | 'small';
   priority?: boolean;
 }) {
+  const sizeClass =
+    size === 'large'
+      ? 'col-span-2 row-span-2'
+      : size === 'medium'
+        ? 'col-span-1 row-span-2'
+        : 'col-span-1 row-span-1';
+
   return (
-    <div
-      className={size === 'full' ? 'md:col-span-4 md:row-span-2' : 'md:col-span-2 md:row-span-1'}
-    >
+    <div className={`relative ${sizeClass} overflow-hidden rounded-lg`}>
       <Link
-        className="relative block aspect-square h-full w-full"
+        className="relative block h-full w-full transition-transform duration-300 hover:scale-105"
         href={`/product/${item.handle}`}
         prefetch={true}
       >
         <GridTileImage
           src={item.featuredImage.url}
           fill
-          sizes={
-            size === 'full' ? '(min-width: 768px) 66vw, 100vw' : '(min-width: 768px) 33vw, 100vw'
-          }
+          sizes="(min-width: 768px) 50vw, 100vw"
           priority={priority}
           alt={item.title}
           label={{
-            position: size === 'full' ? 'center' : 'bottom',
+            position: 'center',
             title: item.title as string,
             amount: item.priceRange.maxVariantPrice.amount,
             currencyCode: item.priceRange.maxVariantPrice.currencyCode
@@ -42,7 +45,6 @@ function ThreeItemGridItem({
 }
 
 export async function ThreeItemGrid() {
-  // Collections that start with `hidden-*` are hidden from the search page.
   const homepageItems = await getCollectionProducts({
     collection: 'trending'
   });
@@ -52,10 +54,10 @@ export async function ThreeItemGrid() {
   const [firstProduct, secondProduct, thirdProduct] = homepageItems;
 
   return (
-    <section className="mx-auto grid max-w-screen-2xl gap-4 px-4 pb-4 md:grid-cols-6 md:grid-rows-2 lg:max-h-[calc(100vh-200px)]">
-      <ThreeItemGridItem size="full" item={firstProduct} priority={true} />
-      <ThreeItemGridItem size="half" item={secondProduct} priority={true} />
-      <ThreeItemGridItem size="half" item={thirdProduct} />
+    <section className="mx-auto grid max-w-screen-2xl grid-cols-3 grid-rows-2 gap-4 px-4 lg:h-[80vh]">
+      <ThreeItemHero size="large" item={firstProduct} priority={true} />
+      <ThreeItemHero size="medium" item={secondProduct} />
+      <ThreeItemHero size="small" item={thirdProduct} />
     </section>
   );
 }
