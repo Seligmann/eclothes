@@ -1,5 +1,4 @@
 import CartModal from 'components/cart/modal';
-import LogoSquare from 'components/logo-square';
 import { getMenu } from 'lib/shopify';
 import { Menu } from 'lib/shopify/types';
 import Link from 'next/link';
@@ -19,17 +18,11 @@ export async function Navbar() {
           <MobileMenu menu={menu} />
         </Suspense>
       </div>
-      <div className="flex w-full items-center">
-        <div className="flex w-full md:w-1/3">
-          <Link
-            href="/"
-            prefetch={true}
-            className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
-          >
-            <LogoSquare />
-            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
-              {SITE_NAME}
-            </div>
+      <div className="flex w-full items-center gap-4">
+        <div className="flex flex-none items-center">
+          <Link href="/" prefetch={true} className="flex items-center">
+            {/* Logo */}
+            <div className="ml-2 text-sm font-medium uppercase">{SITE_NAME}</div>
           </Link>
           {menu.length ? (
             <ul className="hidden gap-6 text-sm md:flex md:items-center">
@@ -47,12 +40,14 @@ export async function Navbar() {
             </ul>
           ) : null}
         </div>
-        <div className="hidden justify-center md:flex md:w-1/3">
+
+        <div className="flex flex-grow justify-start">
           <Suspense fallback={<SearchSkeleton />}>
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3">
+
+        <div className="flex flex-none justify-end">
           <CartModal />
         </div>
       </div>
